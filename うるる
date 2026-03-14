@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>SASUKE TYPING</title>
+
+<style>
+body{
+margin:0;
+background:#000814;
+color:white;
+font-family:sans-serif;
+text-align:center;
+}
+
+#titleScreen{
+position:absolute;
+width:100%;
+height:100%;
+display:flex;
+flex-direction:column;
+justify-content:center;
+align-items:center;
+}
+
+button{
+font-size:26px;
+padding:10px 30px;
+cursor:pointer;
+}
+
+#game{
+display:none;
+}
+
+#typing{
+margin-top:20px;
+display:none;
+}
+
+#word{
+font-size:36px;
+}
+
+#typed{
+color:#00ff88;
+}
+
+input{
+font-size:26px;
+padding:10px;
+width:400px;
+}
+</style>
+</head>
+
+<body>
+
+<div id="titleScreen">
+
+<h1>SASUKE TYPING</h1>
+
+<button id="startBtn">START</button>
+
+</div>
+
+<div id="game">
+
+<div id="word"></div>
+<div id="typed"></div>
+
+<div id="typing">
+<input id="input" autocomplete="off">
+</div>
+
+</div>
+
+<script>
+
+const areas=[
+"ぷりずむしーそー",
+"ろーりんぐひる",
+"すくりゅーどらいばー",
+"ふぃっしゅぼーんりばーす",
+"どらごんぐらいだー"
+]
+
+let index=0
+
+const startBtn=document.getElementById("startBtn")
+const wordUI=document.getElementById("word")
+const typedUI=document.getElementById("typed")
+const input=document.getElementById("input")
+
+startBtn.onclick=()=>{
+
+document.getElementById("titleScreen").style.display="none"
+document.getElementById("game").style.display="block"
+document.getElementById("typing").style.display="block"
+
+loadArea()
+
+input.focus()
+
+}
+
+function loadArea(){
+
+wordUI.innerText=areas[index]
+typedUI.innerText=""
+input.value=""
+
+}
+
+input.addEventListener("input",()=>{
+
+typedUI.innerText=input.value
+
+if(input.value===areas[index]){
+
+index++
+
+if(index>=areas.length){
+
+alert("クリア！")
+location.reload()
+return
+
+}
+
+loadArea()
+
+}
+
+})
+
+</script>
+
+</body>
+</html>
