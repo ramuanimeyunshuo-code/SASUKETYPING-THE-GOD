@@ -1,0 +1,5013 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>SASUKE TYPING GOD</title>
+
+<style>
+
+body{
+margin:0;
+background:#08121f;
+color:white;
+font-family:sans-serif;
+overflow:hidden;
+}
+
+#ui{
+position:absolute;
+top:10px;
+left:10px;
+z-index:10;
+}
+
+#stage{font-size:26px;color:gold}
+#timer{font-size:22px}
+#miss{color:#ff4444}
+
+#typing{
+position:absolute;
+bottom:20px;
+width:100%;
+text-align:center;
+}
+
+#word{font-size:34px;margin-bottom:10px}
+
+input{
+font-size:30px;
+padding:10px;
+width:400px;
+}
+
+canvas{
+background:linear-gradient(#001,#034);
+}
+
+#comment{
+font-size:18px;
+color:#ffaa00;
+margin-top:5px;
+}
+
+</style>
+</head>
+
+<body>
+
+<div id="ui">
+
+<div id="stage"></div>
+<div id="timer"></div>
+<div id="miss"></div>
+<div id="comment"></div>
+
+</div>
+
+<canvas id="game" width="1200" height="500"></canvas>
+
+<div id="typing">
+
+<div id="word"></div>
+<input id="input" autocomplete="off">
+
+</div>
+
+<script>
+
+const STAGES=[
+
+{
+name:"1st STAGE",
+areas:[
+"ぷりずむしーそー",
+"ろーりんぐひる",
+"すくりゅーどらいばー",
+"ふぃっしゅぼーんりばーす",
+"でぃーえっくす",
+"どらごんぐらいだー",
+"たっくる",
+"そりたつかべ"
+]
+},
+
+{
+name:"2nd STAGE",
+areas:[
+"ろーりんぐろぐ",
+"さーもんらだー",
+"ばっくすとりーむ",
+"りばーすこんべあ",
+"うぉーるりふてぃんぐ"
+]
+},
+
+{
+name:"3rd STAGE",
+areas:[
+"ふらいんぐばー",
+"さいどわいんだー",
+"すいんぐえっじ",
+"くりふでぃめんしょん",
+"ばーてぃかるりみっとばーすと",
+"ぱいぷすらいだー"
+]
+},
+
+{
+name:"FINAL STAGE",
+areas:[
+"すぴーどくらいみんぐ",
+"さーもんらだー",
+"つなのぼり"
+]
+}
+
+]
+
+let stageIndex=0
+let areaIndex=0
+let miss=0
+let timer=150
+
+const canvas=document.getElementById("game")
+const ctx=canvas.getContext("2d")
+
+let runnerX=150
+let cameraX=0
+let speed=0
+
+const wordUI=document.getElementById("word")
+const input=document.getElementById("input")
+const stageUI=document.getElementById("stage")
+const timerUI=document.getElementById("timer")
+const missUI=document.getElementById("miss")
+const comment=document.getElementById("comment")
+
+function commentary(){
+
+const list=[
+"いいぞ！！",
+"耐えろ！！",
+"ここが勝負！！",
+"落ちるな！！",
+"いける！！",
+"さあ来た！！"
+]
+
+return list[Math.floor(Math.random()*list.length)]
+
+}
+
+function loadArea(){
+
+const stage=STAGES[stageIndex]
+
+stageUI.innerText=stage.name
+
+wordUI.innerText=stage.areas[areaIndex]
+
+comment.innerText=commentary()
+
+}
+
+function nextArea(){
+
+areaIndex++
+
+runnerX+=350
+
+if(areaIndex>=STAGES[stageIndex].areas.length){
+
+stageIndex++
+areaIndex=0
+
+if(stageIndex>=STAGES.length){
+
+alert("完全制覇！！！！")
+
+location.reload()
+
+}
+
+}
+
+loadArea()
+
+}
+
+input.addEventListener("input",()=>{
+
+const target=STAGES[stageIndex].areas[areaIndex]
+
+if(input.value===target){
+
+input.value=""
+
+speed=8
+
+nextArea()
+
+}
+
+})
+
+document.addEventListener("keydown",(e)=>{
+
+if(e.key==="Backspace"){
+
+miss++
+
+missUI.innerText="MISS "+miss+"/5"
+
+comment.innerText="ミス！！"
+
+if(miss>=5){
+
+alert("落水！！")
+
+location.reload()
+
+}
+
+}
+
+})
+
+function update(){
+
+timer-=0.02
+
+timerUI.innerText="TIME "+Math.floor(timer)
+
+if(timer<=0){
+
+alert("時間切れ！")
+
+location.reload()
+
+}
+
+speed*=0.9
+
+runnerX+=speed
+
+cameraX=runnerX-200
+
+}
+
+function drawRunner(){
+
+ctx.fillStyle="red"
+
+ctx.fillRect(runnerX-cameraX,320,40,40)
+
+}
+
+function drawCourse(){
+
+ctx.fillStyle="#444"
+
+for(let i=0;i<40;i++){
+
+ctx.fillRect(i*350-cameraX,360,250,20)
+
+}
+
+}
+
+function drawWater(){
+
+ctx.fillStyle="#0088ff"
+
+ctx.fillRect(0,380,canvas.width,120)
+
+}
+
+function draw(){
+
+ctx.clearRect(0,0,canvas.width,canvas.height)
+
+drawWater()
+drawCourse()
+drawRunner()
+
+}
+
+function loop(){
+
+update()
+draw()
+
+requestAnimationFrame(loop)
+
+}
+
+loadArea()
+
+loop()
+
+</script>
+
+</body>
+</html><!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>SASUKE TYPING GOD Lv2</title>
+
+<style>
+
+body{
+margin:0;
+background:#07111d;
+color:white;
+font-family:sans-serif;
+overflow:hidden;
+}
+
+#ui{
+position:absolute;
+top:10px;
+left:10px;
+z-index:10;
+}
+
+#stage{font-size:26px;color:gold}
+#timer{font-size:22px}
+#miss{color:#ff4444}
+
+#progressbar{
+position:absolute;
+top:80px;
+left:10px;
+width:300px;
+height:20px;
+background:#333;
+}
+
+#progress{
+height:20px;
+background:#00ff88;
+width:0%;
+}
+
+#typing{
+position:absolute;
+bottom:20px;
+width:100%;
+text-align:center;
+}
+
+#word{
+font-size:34px;
+}
+
+#typed{
+font-size:22px;
+color:#00ff88;
+}
+
+input{
+font-size:28px;
+padding:10px;
+width:400px;
+}
+
+canvas{
+background:linear-gradient(#001,#045);
+}
+
+</style>
+</head>
+
+<body>
+
+<div id="ui">
+
+<div id="stage"></div>
+<div id="timer"></div>
+<div id="miss"></div>
+
+<div id="progressbar">
+<div id="progress"></div>
+</div>
+
+</div>
+
+<canvas id="game" width="1200" height="500"></canvas>
+
+<div id="typing">
+
+<div id="word"></div>
+<div id="typed"></div>
+
+<input id="input">
+
+</div>
+
+<script>
+
+const STAGES=[
+
+{
+name:"1st STAGE",
+areas:[
+"ぷりずむしーそー",
+"ろーりんぐひる",
+"すくりゅーどらいばー",
+"ふぃっしゅぼーんりばーす",
+"でぃーえっくす",
+"どらごんぐらいだー",
+"たっくる",
+"そりたつかべ"
+]
+},
+
+{
+name:"2nd STAGE",
+areas:[
+"ろーりんぐろぐ",
+"さーもんらだー",
+"ばっくすとりーむ",
+"りばーすこんべあ",
+"うぉーるりふてぃんぐ"
+]
+}
+
+]
+
+let stageIndex=0
+let areaIndex=0
+let miss=0
+let timer=150
+
+const canvas=document.getElementById("game")
+const ctx=canvas.getContext("2d")
+
+let runner={
+
+x:150,
+y:300,
+vy:0,
+jump:false
+
+}
+
+let cameraX=0
+
+const input=document.getElementById("input")
+const wordUI=document.getElementById("word")
+const typedUI=document.getElementById("typed")
+
+const stageUI=document.getElementById("stage")
+const timerUI=document.getElementById("timer")
+const missUI=document.getElementById("miss")
+const progress=document.getElementById("progress")
+
+function loadArea(){
+
+const stage=STAGES[stageIndex]
+
+stageUI.innerText=stage.name
+
+wordUI.innerText=stage.areas[areaIndex]
+
+typedUI.innerText=""
+
+updateProgress()
+
+}
+
+function updateProgress(){
+
+let total=0
+let current=0
+
+STAGES.forEach((s,i)=>{
+
+total+=s.areas.length
+
+if(i<stageIndex) current+=s.areas.length
+
+})
+
+current+=areaIndex
+
+progress.style.width=(current/total*100)+"%"
+
+}
+
+function nextArea(){
+
+areaIndex++
+
+runner.vy=-10
+
+if(areaIndex>=STAGES[stageIndex].areas.length){
+
+stageIndex++
+areaIndex=0
+
+if(stageIndex>=STAGES.length){
+
+alert("完全制覇！！！")
+
+location.reload()
+
+}
+
+}
+
+loadArea()
+
+}
+
+input.addEventListener("input",()=>{
+
+const target=STAGES[stageIndex].areas[areaIndex]
+
+typedUI.innerText=input.value
+
+if(input.value===target){
+
+input.value=""
+
+nextArea()
+
+}
+
+})
+
+document.addEventListener("keydown",(e)=>{
+
+if(e.key==="Backspace"){
+
+miss++
+
+missUI.innerText="MISS "+miss+"/5"
+
+if(miss>=5){
+
+alert("落水！！")
+
+location.reload()
+
+}
+
+}
+
+})
+
+function physics(){
+
+runner.vy+=0.5
+
+runner.y+=runner.vy
+
+if(runner.y>300){
+
+runner.y=300
+runner.vy=0
+
+}
+
+}
+
+function update(){
+
+timer-=0.02
+
+timerUI.innerText="TIME "+Math.floor(timer)
+
+if(timer<=0){
+
+alert("時間切れ")
+
+location.reload()
+
+}
+
+cameraX=runner.x-200
+
+}
+
+function drawRunner(){
+
+ctx.fillStyle="red"
+
+ctx.fillRect(runner.x-cameraX,runner.y,40,40)
+
+}
+
+function drawGround(){
+
+ctx.fillStyle="#444"
+
+for(let i=0;i<50;i++){
+
+ctx.fillRect(i*300-cameraX,350,200,20)
+
+}
+
+}
+
+function drawWater(){
+
+ctx.fillStyle="#0077ff"
+
+ctx.fillRect(0,370,canvas.width,150)
+
+}
+
+function draw(){
+
+ctx.clearRect(0,0,canvas.width,canvas.height)
+
+drawWater()
+drawGround()
+drawRunner()
+
+}
+
+function loop(){
+
+physics()
+update()
+draw()
+
+requestAnimationFrame(loop)
+
+}
+
+loadArea()
+
+loop()
+
+</script>
+
+</body>
+</html><!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>SASUKE TYPING LEVEL3</title>
+
+<style>
+
+body{
+margin:0;
+background:#061021;
+color:white;
+font-family:sans-serif;
+overflow:hidden;
+}
+
+#ui{
+position:absolute;
+top:10px;
+left:10px;
+z-index:10;
+}
+
+#stage{font-size:26px;color:gold}
+#timer{font-size:22px}
+#miss{color:#ff4444}
+
+#typing{
+position:absolute;
+bottom:20px;
+width:100%;
+text-align:center;
+}
+
+#word{
+font-size:34px;
+}
+
+#typed{
+color:#00ff88;
+}
+
+input{
+font-size:28px;
+padding:10px;
+width:400px;
+}
+
+canvas{
+background:linear-gradient(#001,#034);
+}
+
+</style>
+</head>
+
+<body>
+
+<div id="ui">
+
+<div id="stage"></div>
+<div id="timer"></div>
+<div id="miss"></div>
+
+</div>
+
+<canvas id="game" width="1200" height="500"></canvas>
+
+<div id="typing">
+
+<div id="word"></div>
+<div id="typed"></div>
+
+<input id="input">
+
+</div>
+
+<script>
+
+const STAGES=[
+
+{
+name:"1st STAGE",
+areas:[
+"ぷりずむしーそー",
+"ろーりんぐひる",
+"すくりゅーどらいばー",
+"ふぃっしゅぼーんりばーす",
+"でぃーえっくす",
+"どらごんぐらいだー",
+"たっくる",
+"そりたつかべ"
+]
+}
+
+]
+
+let stageIndex=0
+let areaIndex=0
+let miss=0
+let timer=150
+
+const canvas=document.getElementById("game")
+const ctx=canvas.getContext("2d")
+
+let runner={
+x:150,
+y:300,
+vy:0
+}
+
+let cameraX=0
+
+const input=document.getElementById("input")
+const wordUI=document.getElementById("word")
+const typedUI=document.getElementById("typed")
+
+const stageUI=document.getElementById("stage")
+const timerUI=document.getElementById("timer")
+const missUI=document.getElementById("miss")
+
+const obstacles=[]
+
+function createObstacle(){
+
+obstacles.push({
+
+x:runner.x+400,
+y:320,
+w:40,
+h:40
+
+})
+
+}
+
+function loadArea(){
+
+const stage=STAGES[stageIndex]
+
+stageUI.innerText=stage.name
+
+wordUI.innerText=stage.areas[areaIndex]
+
+typedUI.innerText=""
+
+createObstacle()
+
+}
+
+function nextArea(){
+
+areaIndex++
+
+runner.vy=-12
+
+runner.x+=200
+
+if(areaIndex>=STAGES[stageIndex].areas.length){
+
+alert("1stステージクリア")
+
+location.reload()
+
+}
+
+loadArea()
+
+}
+
+input.addEventListener("input",()=>{
+
+const target=STAGES[stageIndex].areas[areaIndex]
+
+typedUI.innerText=input.value
+
+if(input.value===target){
+
+input.value=""
+
+nextArea()
+
+}
+
+})
+
+document.addEventListener("keydown",(e)=>{
+
+if(e.key==="Backspace"){
+
+miss++
+
+missUI.innerText="MISS "+miss+"/5"
+
+if(miss>=5){
+
+alert("落水")
+
+location.reload()
+
+}
+
+}
+
+})
+
+function physics(){
+
+runner.vy+=0.6
+
+runner.y+=runner.vy
+
+if(runner.y>300){
+
+runner.y=300
+runner.vy=0
+
+}
+
+}
+
+function obstacleCollision(){
+
+for(let o of obstacles){
+
+if(
+
+runner.x<o.x+o.w &&
+runner.x+40>o.x &&
+runner.y<o.y+o.h &&
+runner.y+40>o.y
+
+){
+
+alert("障害物に当たった")
+
+location.reload()
+
+}
+
+}
+
+}
+
+function update(){
+
+timer-=0.02
+
+timerUI.innerText="TIME "+Math.floor(timer)
+
+cameraX=runner.x-200
+
+obstacleCollision()
+
+}
+
+function drawRunner(){
+
+ctx.fillStyle="red"
+
+ctx.fillRect(runner.x-cameraX,runner.y,40,40)
+
+}
+
+function drawObstacles(){
+
+ctx.fillStyle="orange"
+
+for(let o of obstacles){
+
+ctx.fillRect(o.x-cameraX,o.y,o.w,o.h)
+
+}
+
+}
+
+function drawGround(){
+
+ctx.fillStyle="#444"
+
+for(let i=0;i<40;i++){
+
+ctx.fillRect(i*300-cameraX,350,200,20)
+
+}
+
+}
+
+function drawWater(){
+
+ctx.fillStyle="#0077ff"
+
+ctx.fillRect(0,370,canvas.width,150)
+
+}
+
+function draw(){
+
+ctx.clearRect(0,0,canvas.width,canvas.height)
+
+drawWater()
+drawGround()
+drawObstacles()
+drawRunner()
+
+}
+
+function loop(){
+
+physics()
+update()
+draw()
+
+requestAnimationFrame(loop)
+
+}
+
+loadArea()
+
+loop()
+
+</script>
+
+</body>
+</html><!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>SASUKE TYPING LEVEL4</title>
+
+<style>
+
+body{
+margin:0;
+background:#050c18;
+color:white;
+font-family:sans-serif;
+overflow:hidden;
+}
+
+#ui{
+position:absolute;
+top:10px;
+left:10px;
+}
+
+#stage{
+font-size:26px;
+color:gold;
+}
+
+#comment{
+font-size:20px;
+color:#ffaa00;
+margin-top:5px;
+}
+
+#timer{font-size:22px}
+#miss{color:red}
+
+#typing{
+position:absolute;
+bottom:20px;
+width:100%;
+text-align:center;
+}
+
+#word{font-size:34px}
+#typed{color:#00ff88}
+
+input{
+font-size:28px;
+padding:10px;
+width:420px;
+}
+
+canvas{
+background:linear-gradient(#001,#035);
+}
+
+</style>
+</head>
+
+<body>
+
+<div id="ui">
+
+<div id="stage"></div>
+<div id="timer"></div>
+<div id="miss"></div>
+<div id="comment"></div>
+
+</div>
+
+<canvas id="game" width="1200" height="500"></canvas>
+
+<div id="typing">
+
+<div id="word"></div>
+<div id="typed"></div>
+<input id="input">
+
+</div>
+
+<script>
+
+const comments=[
+"さあ来た！！",
+"耐えろ！！",
+"いいぞ！！",
+"落ちるな！！",
+"ここが勝負！！"
+]
+
+function randomComment(){
+
+return comments[Math.floor(Math.random()*comments.length)]
+
+}
+
+const STAGES=[
+
+{
+name:"1st STAGE",
+areas:[
+"ぷりずむしーそー",
+"ろーりんぐひる",
+"すくりゅーどらいばー",
+"ふぃっしゅぼーんりばーす",
+"でぃーえっくす",
+"どらごんぐらいだー",
+"たっくる",
+"そりたつかべ"
+]
+}
+
+]
+
+let stageIndex=0
+let areaIndex=0
+let miss=0
+let timer=150
+
+const canvas=document.getElementById("game")
+const ctx=canvas.getContext("2d")
+
+let runner={
+x:150,
+y:300,
+vy:0,
+frame:0
+}
+
+let cameraX=0
+
+const input=document.getElementById("input")
+const wordUI=document.getElementById("word")
+const typedUI=document.getElementById("typed")
+
+const stageUI=document.getElementById("stage")
+const timerUI=document.getElementById("timer")
+const missUI=document.getElementById("miss")
+const commentUI=document.getElementById("comment")
+
+const obstacles=[]
+
+function createObstacle(){
+
+const types=["wall","log"]
+
+const type=types[Math.floor(Math.random()*types.length)]
+
+obstacles.push({
+
+type:type,
+x:runner.x+400,
+y:320,
+w:40,
+h:40
+
+})
+
+}
+
+function loadArea(){
+
+const stage=STAGES[stageIndex]
+
+stageUI.innerText=stage.name
+
+wordUI.innerText=stage.areas[areaIndex]
+
+typedUI.innerText=""
+
+commentUI.innerText=randomComment()
+
+createObstacle()
+
+}
+
+function nextArea(){
+
+areaIndex++
+
+runner.vy=-12
+runner.x+=200
+
+if(areaIndex>=STAGES[stageIndex].areas.length){
+
+alert("1st STAGE CLEAR")
+
+location.reload()
+
+}
+
+loadArea()
+
+}
+
+input.addEventListener("input",()=>{
+
+const target=STAGES[stageIndex].areas[areaIndex]
+
+typedUI.innerText=input.value
+
+if(input.value===target){
+
+input.value=""
+
+nextArea()
+
+}
+
+})
+
+document.addEventListener("keydown",(e)=>{
+
+if(e.key==="Backspace"){
+
+miss++
+
+missUI.innerText="MISS "+miss+"/5"
+
+commentUI.innerText="ミス！！"
+
+if(miss>=5){
+
+alert("落水")
+
+location.reload()
+
+}
+
+}
+
+})
+
+function physics(){
+
+runner.vy+=0.6
+
+runner.y+=runner.vy
+
+if(runner.y>300){
+
+runner.y=300
+runner.vy=0
+
+}
+
+}
+
+function collision(){
+
+for(let o of obstacles){
+
+if(
+
+runner.x<o.x+o.w &&
+runner.x+40>o.x &&
+runner.y<o.y+o.h &&
+runner.y+40>o.y
+
+){
+
+commentUI.innerText="激突！！"
+
+alert("障害物に当たった")
+
+location.reload()
+
+}
+
+}
+
+}
+
+function update(){
+
+timer-=0.02
+
+timerUI.innerText="TIME "+Math.floor(timer)
+
+cameraX=runner.x-200
+
+runner.frame++
+
+collision()
+
+}
+
+function drawRunner(){
+
+ctx.fillStyle="red"
+
+let leg=Math.sin(runner.frame*0.3)*5
+
+ctx.fillRect(runner.x-cameraX,runner.y,40,40)
+
+ctx.fillRect(runner.x-cameraX+5,runner.y+40,10,10+leg)
+ctx.fillRect(runner.x-cameraX+25,runner.y+40,10,10-leg)
+
+}
+
+function drawObstacles(){
+
+for(let o of obstacles){
+
+if(o.type==="wall"){
+
+ctx.fillStyle="gray"
+
+}else{
+
+ctx.fillStyle="brown"
+
+}
+
+ctx.fillRect(o.x-cameraX,o.y,o.w,o.h)
+
+}
+
+}
+
+function drawGround(){
+
+ctx.fillStyle="#444"
+
+for(let i=0;i<50;i++){
+
+ctx.fillRect(i*300-cameraX,350,200,20)
+
+}
+
+}
+
+function drawWater(){
+
+ctx.fillStyle="#0077ff"
+
+ctx.fillRect(0,370,canvas.width,150)
+
+}
+
+function draw(){
+
+ctx.clearRect(0,0,canvas.width,canvas.height)
+
+drawWater()
+drawGround()
+drawObstacles()
+drawRunner()
+
+}
+
+function loop(){
+
+physics()
+update()
+draw()
+
+requestAnimationFrame(loop)
+
+}
+
+loadArea()
+
+loop()
+
+</script>
+
+</body>
+</html><!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>SASUKE TYPING LEVEL5</title>
+<style>
+body{margin:0;background:#04101f;color:white;font-family:sans-serif;overflow:hidden;}
+#ui{position:absolute;top:10px;left:10px;}
+#stage{font-size:26px;color:gold}
+#timer{font-size:22px}
+#miss{color:#ff5555}
+#comment{color:#ffaa00;margin-top:5px}
+
+#typing{position:absolute;bottom:20px;width:100%;text-align:center;}
+#word{font-size:34px}
+#typed{color:#00ff88}
+input{font-size:28px;padding:10px;width:420px;}
+
+canvas{background:linear-gradient(#001,#034);}
+</style>
+</head>
+
+<body>
+
+<div id="ui">
+<div id="stage"></div>
+<div id="timer"></div>
+<div id="miss"></div>
+<div id="comment"></div>
+</div>
+
+<canvas id="game" width="1200" height="500"></canvas>
+
+<div id="typing">
+<div id="word"></div>
+<div id="typed"></div>
+<input id="input">
+</div>
+
+<script>
+
+const comments=[
+"さあ来た！！",
+"耐えろ！！",
+"ここが勝負！！",
+"落ちるな！！",
+"いいぞ！！"
+]
+
+function say(){
+return comments[Math.floor(Math.random()*comments.length)]
+}
+
+const STAGE={
+name:"1st STAGE",
+areas:[
+{name:"ぷりずむしーそー",type:"run"},
+{name:"ろーりんぐひる",type:"run"},
+{name:"どらごんぐらいだー",type:"glide"},
+{name:"たっくる",type:"run"},
+{name:"そりたつかべ",type:"climb"},
+{name:"さーもんらだー",type:"ladder"}
+]
+}
+
+let areaIndex=0
+let miss=0
+let timer=150
+
+const canvas=document.getElementById("game")
+const ctx=canvas.getContext("2d")
+
+const input=document.getElementById("input")
+const wordUI=document.getElementById("word")
+const typedUI=document.getElementById("typed")
+
+const stageUI=document.getElementById("stage")
+const timerUI=document.getElementById("timer")
+const missUI=document.getElementById("miss")
+const commentUI=document.getElementById("comment")
+
+let runner={
+x:150,
+y:300,
+vy:0,
+state:"run",
+frame:0
+}
+
+let cameraX=0
+
+function loadArea(){
+
+let area=STAGE.areas[areaIndex]
+
+stageUI.innerText=STAGE.name
+wordUI.innerText=area.name
+typedUI.innerText=""
+commentUI.innerText=say()
+
+}
+
+function nextArea(){
+
+let area=STAGE.areas[areaIndex]
+
+if(area.type==="glide") runner.state="glide"
+if(area.type==="climb") runner.state="climb"
+if(area.type==="ladder") runner.state="ladder"
+
+runner.vy=-12
+runner.x+=200
+
+areaIndex++
+
+if(areaIndex>=STAGE.areas.length){
+
+alert("1st STAGE CLEAR!!")
+location.reload()
+
+}
+
+loadArea()
+
+}
+
+input.addEventListener("input",()=>{
+
+let target=STAGE.areas[areaIndex].name
+
+typedUI.innerText=input.value
+
+if(input.value===target){
+
+input.value=""
+nextArea()
+
+}
+
+})
+
+document.addEventListener("keydown",(e)=>{
+
+if(e.key==="Backspace"){
+
+miss++
+missUI.innerText="MISS "+miss+"/5"
+
+if(miss>=5){
+alert("落水！！")
+location.reload()
+}
+
+}
+
+})
+
+function physics(){
+
+runner.frame++
+
+if(runner.state==="run"){
+
+runner.vy+=0.6
+runner.y+=runner.vy
+
+if(runner.y>300){
+runner.y=300
+runner.vy=0
+}
+
+}
+
+if(runner.state==="glide"){
+
+runner.y+=Math.sin(runner.frame*0.1)*1
+
+}
+
+if(runner.state==="climb"){
+
+runner.y-=1
+if(runner.y<200) runner.state="run"
+
+}
+
+if(runner.state==="ladder"){
+
+runner.y-=2
+if(runner.y<250) runner.state="run"
+
+}
+
+}
+
+function update(){
+
+timer-=0.02
+timerUI.innerText="TIME "+Math.floor(timer)
+
+cameraX=runner.x-200
+
+}
+
+function drawRunner(){
+
+ctx.fillStyle="red"
+
+let leg=Math.sin(runner.frame*0.3)*5
+
+ctx.fillRect(runner.x-cameraX,runner.y,40,40)
+
+ctx.fillRect(runner.x-cameraX+5,runner.y+40,10,10+leg)
+ctx.fillRect(runner.x-cameraX+25,runner.y+40,10,10-leg)
+
+}
+
+function drawCourse(){
+
+ctx.fillStyle="#444"
+
+for(let i=0;i<50;i++){
+ctx.fillRect(i*300-cameraX,350,200,20)
+}
+
+}
+
+function drawWater(){
+
+ctx.fillStyle="#0077ff"
+ctx.fillRect(0,370,canvas.width,150)
+
+}
+
+function draw(){
+
+ctx.clearRect(0,0,canvas.width,canvas.height)
+
+drawWater()
+drawCourse()
+drawRunner()
+
+}
+
+function loop(){
+
+physics()
+update()
+draw()
+
+requestAnimationFrame(loop)
+
+}
+
+loadArea()
+loop()
+
+</script>
+
+</body>
+</html><!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>SASUKE TYPING</title>
+
+<style>
+
+body{
+margin:0;
+background:#031021;
+color:white;
+font-family:sans-serif;
+overflow:hidden;
+}
+
+#titleScreen{
+position:absolute;
+width:100%;
+height:100%;
+display:flex;
+flex-direction:column;
+justify-content:center;
+align-items:center;
+background:#02101d;
+}
+
+#title{
+font-size:60px;
+color:gold;
+margin-bottom:20px;
+}
+
+button{
+font-size:30px;
+padding:15px 40px;
+cursor:pointer;
+}
+
+#best{
+margin-top:20px;
+font-size:20px;
+}
+
+#ui{
+position:absolute;
+top:10px;
+left:10px;
+display:none;
+}
+
+#typing{
+position:absolute;
+bottom:20px;
+width:100%;
+text-align:center;
+display:none;
+}
+
+#word{font-size:34px}
+#typed{color:#00ff88}
+
+input{
+font-size:28px;
+padding:10px;
+width:420px;
+}
+
+canvas{
+background:linear-gradient(#001,#035);
+display:none;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div id="titleScreen">
+
+<div id="title">SASUKE TYPING</div>
+
+<button onclick="startGame()">START</button>
+
+<div id="best"></div>
+
+</div>
+
+<div id="ui">
+
+<div id="timer"></div>
+<div id="miss"></div>
+<div id="comment"></div>
+
+</div>
+
+<canvas id="game" width="1200" height="500"></canvas>
+
+<div id="typing">
+
+<div id="word"></div>
+<div id="typed"></div>
+<input id="input">
+
+</div>
+
+<script>
+
+const comments=[
+"さあ来た！！",
+"耐えろ！！",
+"ここが勝負！！",
+"落ちるな！！"
+]
+
+function say(){
+return comments[Math.floor(Math.random()*comments.length)]
+}
+
+const areas=[
+"ぷりずむしーそー",
+"ろーりんぐひる",
+"どらごんぐらいだー",
+"たっくる",
+"そりたつかべ"
+]
+
+let areaIndex=0
+let miss=0
+let timer=150
+
+let startTime
+
+const canvas=document.getElementById("game")
+const ctx=canvas.getContext("2d")
+
+const input=document.getElementById("input")
+const wordUI=document.getElementById("word")
+const typedUI=document.getElementById("typed")
+
+const timerUI=document.getElementById("timer")
+const missUI=document.getElementById("miss")
+const commentUI=document.getElementById("comment")
+
+const bestUI=document.getElementById("best")
+
+let runner={
+x:150,
+y:300,
+vy:0,
+frame:0
+}
+
+let cameraX=0
+
+function startGame(){
+
+document.getElementById("titleScreen").style.display="none"
+document.getElementById("ui").style.display="block"
+document.getElementById("typing").style.display="block"
+canvas.style.display="block"
+
+startTime=Date.now()
+
+loadArea()
+
+loop()
+
+}
+
+function loadArea(){
+
+wordUI.innerText=areas[areaIndex]
+typedUI.innerText=""
+commentUI.innerText=say()
+
+}
+
+function nextArea(){
+
+runner.vy=-12
+runner.x+=200
+
+areaIndex++
+
+if(areaIndex>=areas.length){
+
+finish()
+
+}
+
+loadArea()
+
+}
+
+function finish(){
+
+let time=(Date.now()-startTime)/1000
+
+let best=localStorage.getItem("best")
+
+if(!best || time<best){
+
+localStorage.setItem("best",time)
+
+}
+
+alert("クリア！タイム："+time+"秒")
+
+location.reload()
+
+}
+
+input.addEventListener("input",()=>{
+
+let target=areas[areaIndex]
+
+typedUI.innerText=input.value
+
+if(input.value===target){
+
+input.value=""
+
+nextArea()
+
+}
+
+})
+
+document.addEventListener("keydown",(e)=>{
+
+if(e.key==="Backspace"){
+
+miss++
+missUI.innerText="MISS "+miss+"/5"
+
+if(miss>=5){
+
+alert("落水！")
+
+location.reload()
+
+}
+
+}
+
+})
+
+function physics(){
+
+runner.frame++
+
+runner.vy+=0.6
+runner.y+=runner.vy
+
+if(runner.y>300){
+runner.y=300
+runner.vy=0
+}
+
+}
+
+function update(){
+
+timer-=0.02
+
+timerUI.innerText="TIME "+Math.floor(timer)
+
+cameraX=runner.x-200
+
+}
+
+function drawRunner(){
+
+ctx.fillStyle="red"
+
+let leg=Math.sin(runner.frame*0.3)*5
+
+ctx.fillRect(runner.x-cameraX,runner.y,40,40)
+
+ctx.fillRect(runner.x-cameraX+5,runner.y+40,10,10+leg)
+ctx.fillRect(runner.x-cameraX+25,runner.y+40,10,10-leg)
+
+}
+
+function drawGround(){
+
+ctx.fillStyle="#444"
+
+for(let i=0;i<50;i++){
+
+ctx.fillRect(i*300-cameraX,350,200,20)
+
+}
+
+}
+
+function drawWater(){
+
+ctx.fillStyle="#0077ff"
+ctx.fillRect(0,370,canvas.width,150)
+
+}
+
+function draw(){
+
+ctx.clearRect(0,0,canvas.width,canvas.height)
+
+drawWater()
+drawGround()
+drawRunner()
+
+}
+
+function loop(){
+
+physics()
+update()
+draw()
+
+requestAnimationFrame(loop)
+
+}
+
+let best=localStorage.getItem("best")
+
+if(best){
+bestUI.innerText="BEST TIME : "+best+" 秒"
+}
+
+</script>
+
+</body>
+</html><!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>SASUKE TYPING</title>
+
+<style>
+
+body{
+margin:0;
+background:#020c18;
+color:white;
+font-family:sans-serif;
+overflow:hidden;
+}
+
+#titleScreen{
+position:absolute;
+width:100%;
+height:100%;
+display:flex;
+flex-direction:column;
+justify-content:center;
+align-items:center;
+background:#010b16;
+}
+
+#title{
+font-size:60px;
+color:gold;
+margin-bottom:30px;
+}
+
+button{
+font-size:30px;
+padding:15px 40px;
+cursor:pointer;
+}
+
+#ui{
+position:absolute;
+top:10px;
+left:10px;
+display:none;
+}
+
+#stage{
+font-size:28px;
+color:gold;
+}
+
+#typing{
+position:absolute;
+bottom:20px;
+width:100%;
+text-align:center;
+display:none;
+}
+
+#word{
+font-size:34px;
+}
+
+#typed{
+color:#00ff88;
+}
+
+input{
+font-size:28px;
+padding:10px;
+width:420px;
+}
+
+canvas{
+background:linear-gradient(#001,#034);
+display:none;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div id="titleScreen">
+
+<div id="title">SASUKE TYPING</div>
+
+<button onclick="startGame()">START</button>
+
+</div>
+
+<div id="ui">
+
+<div id="stage"></div>
+<div id="timer"></div>
+<div id="miss"></div>
+
+</div>
+
+<canvas id="game" width="1200" height="500"></canvas>
+
+<div id="typing">
+
+<div id="word"></div>
+<div id="typed"></div>
+
+<input id="input">
+
+</div>
+
+<script>
+
+const STAGES=[
+
+{
+name:"1st STAGE",
+areas:[
+"ぷりずむしーそー",
+"ろーりんぐひる",
+"すくりゅーどらいばー",
+"ふぃっしゅぼーんりばーす",
+"でぃーえっくす",
+"どらごんぐらいだー",
+"たっくる",
+"そりたつかべ"
+]
+},
+
+{
+name:"2nd STAGE",
+areas:[
+"ろーりんぐろぐ",
+"さーもんらだー",
+"ばっくすとりーむ",
+"りばーすこんべあ",
+"うぉーるりふてぃんぐ"
+]
+},
+
+{
+name:"3rd STAGE",
+areas:[
+"ふらいんぐばー",
+"さいどわいんだー",
+"すいんぐえっじ",
+"くりふでぃめんしょん",
+"ばーてぃかるりみっとばーすと",
+"ぱいぷすらいだー"
+]
+},
+
+{
+name:"FINAL STAGE",
+areas:[
+"すぴーどくらいみんぐ",
+"さーもんらだー",
+"つなのぼり"
+]
+}
+
+]
+
+let stageIndex=0
+let areaIndex=0
+
+let timer=180
+let miss=0
+
+let startTime
+
+const canvas=document.getElementById("game")
+const ctx=canvas.getContext("2d")
+
+const input=document.getElementById("input")
+const wordUI=document.getElementById("word")
+const typedUI=document.getElementById("typed")
+
+const stageUI=document.getElementById("stage")
+const timerUI=document.getElementById("timer")
+const missUI=document.getElementById("miss")
+
+let runner={
+x:150,
+y:300,
+vy:0,
+frame:0
+}
+
+let cameraX=0
+
+function startGame(){
+
+document.getElementById("titleScreen").style.display="none"
+document.getElementById("ui").style.display="block"
+document.getElementById("typing").style.display="block"
+canvas.style.display="block"
+
+startTime=Date.now()
+
+loadArea()
+
+loop()
+
+}
+
+function loadArea(){
+
+let stage=STAGES[stageIndex]
+
+stageUI.innerText=stage.name
+
+wordUI.innerText=stage.areas[areaIndex]
+
+typedUI.innerText=""
+
+}
+
+function nextArea(){
+
+runner.vy=-12
+runner.x+=200
+
+areaIndex++
+
+let stage=STAGES[stageIndex]
+
+if(areaIndex>=stage.areas.length){
+
+stageIndex++
+areaIndex=0
+
+if(stageIndex>=STAGES.length){
+
+finish()
+return
+
+}
+
+}
+
+loadArea()
+
+}
+
+function finish(){
+
+let time=(Date.now()-startTime)/1000
+
+alert("完全制覇！！ タイム："+time+"秒")
+
+location.reload()
+
+}
+
+input.addEventListener("input",()=>{
+
+let target=STAGES[stageIndex].areas[areaIndex]
+
+typedUI.innerText=input.value
+
+if(input.value===target){
+
+input.value=""
+nextArea()
+
+}
+
+})
+
+document.addEventListener("keydown",(e)=>{
+
+if(e.key==="Backspace"){
+
+miss++
+missUI.innerText="MISS "+miss+"/5"
+
+if(miss>=5){
+
+alert("落水！！")
+
+location.reload()
+
+}
+
+}
+
+})
+
+function physics(){
+
+runner.frame++
+
+runner.vy+=0.6
+runner.y+=runner.vy
+
+if(runner.y>300){
+
+runner.y=300
+runner.vy=0
+
+}
+
+}
+
+function update(){
+
+timer-=0.02
+
+timerUI.innerText="TIME "+Math.floor(timer)
+
+cameraX=runner.x-200
+
+}
+
+function drawRunner(){
+
+ctx.fillStyle="red"
+
+let leg=Math.sin(runner.frame*0.3)*5
+
+ctx.fillRect(runner.x-cameraX,runner.y,40,40)
+
+ctx.fillRect(runner.x-cameraX+5,runner.y+40,10,10+leg)
+ctx.fillRect(runner.x-cameraX+25,runner.y+40,10,10-leg)
+
+}
+
+function drawGround(){
+
+ctx.fillStyle="#444"
+
+for(let i=0;i<60;i++){
+
+ctx.fillRect(i*300-cameraX,350,200,20)
+
+}
+
+}
+
+function drawWater(){
+
+ctx.fillStyle="#0077ff"
+
+ctx.fillRect(0,370,canvas.width,150)
+
+}
+
+function draw(){
+
+ctx.clearRect(0,0,canvas.width,canvas.height)
+
+drawWater()
+drawGround()
+drawRunner()
+
+}
+
+function loop(){
+
+physics()
+update()
+draw()
+
+requestAnimationFrame(loop)
+
+}
+
+</script>
+
+</body>
+</html><!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>SASUKE TYPING</title>
+
+<style>
+
+body{
+margin:0;
+background:#020c18;
+color:white;
+font-family:sans-serif;
+overflow:hidden;
+}
+
+#titleScreen{
+position:absolute;
+width:100%;
+height:100%;
+display:flex;
+flex-direction:column;
+justify-content:center;
+align-items:center;
+background:#010b16;
+}
+
+#title{
+font-size:60px;
+color:gold;
+margin-bottom:20px;
+}
+
+button{
+font-size:24px;
+padding:12px 30px;
+margin:5px;
+cursor:pointer;
+}
+
+#ranking{
+margin-top:20px;
+font-size:18px;
+}
+
+#ui{
+position:absolute;
+top:10px;
+left:10px;
+display:none;
+}
+
+#stage{
+font-size:26px;
+color:gold;
+}
+
+#comment{
+color:#ffaa00;
+}
+
+#typing{
+position:absolute;
+bottom:20px;
+width:100%;
+text-align:center;
+display:none;
+}
+
+#word{font-size:34px}
+
+#typed{color:#00ff88}
+
+input{
+font-size:28px;
+padding:10px;
+width:420px;
+}
+
+canvas{
+background:linear-gradient(#001,#045);
+display:none;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div id="titleScreen">
+
+<div id="title">SASUKE TYPING</div>
+
+<div>
+
+<button onclick="startGame('easy')">EASY</button>
+<button onclick="startGame('normal')">NORMAL</button>
+<button onclick="startGame('hard')">HARD</button>
+
+</div>
+
+<div id="ranking"></div>
+
+</div>
+
+<div id="ui">
+
+<div id="stage"></div>
+<div id="timer"></div>
+<div id="miss"></div>
+<div id="comment"></div>
+
+</div>
+
+<canvas id="game" width="1200" height="500"></canvas>
+
+<div id="typing">
+
+<div id="word"></div>
+<div id="typed"></div>
+
+<input id="input">
+
+</div>
+
+<script>
+
+const comments=[
+"さあ来た！！",
+"耐えろ！！",
+"落ちるな！！",
+"いいぞ！！",
+"これは難しい！！"
+]
+
+function say(){
+return comments[Math.floor(Math.random()*comments.length)]
+}
+
+const STAGES=[
+
+{ name:"1st STAGE",
+areas:[
+"ぷりずむしーそー",
+"ろーりんぐひる",
+"すくりゅーどらいばー",
+"ふぃっしゅぼーんりばーす",
+"どらごんぐらいだー",
+"たっくる",
+"そりたつかべ"
+]},
+
+{ name:"2nd STAGE",
+areas:[
+"ろーりんぐろぐ",
+"さーもんらだー",
+"ばっくすとりーむ",
+"りばーすこんべあ"
+]},
+
+{ name:"3rd STAGE",
+areas:[
+"ふらいんぐばー",
+"さいどわいんだー",
+"くりふでぃめんしょん"
+]},
+
+{ name:"FINAL STAGE",
+areas:[
+"すぴーどくらいみんぐ",
+"つなのぼり"
+]}
+
+]
+
+let stageIndex=0
+let areaIndex=0
+
+let timer=180
+let miss=0
+let missLimit=5
+
+let startTime
+
+const canvas=document.getElementById("game")
+const ctx=canvas.getContext("2d")
+
+const input=document.getElementById("input")
+const wordUI=document.getElementById("word")
+const typedUI=document.getElementById("typed")
+
+const stageUI=document.getElementById("stage")
+const timerUI=document.getElementById("timer")
+const missUI=document.getElementById("miss")
+const commentUI=document.getElementById("comment")
+
+let runner={x:150,y:300,vy:0,frame:0}
+
+let cameraX=0
+
+function startGame(diff){
+
+if(diff==="easy") missLimit=10
+if(diff==="normal") missLimit=5
+if(diff==="hard") missLimit=3
+
+document.getElementById("titleScreen").style.display="none"
+document.getElementById("ui").style.display="block"
+document.getElementById("typing").style.display="block"
+canvas.style.display="block"
+
+startTime=Date.now()
+
+loadArea()
+loop()
+
+}
+
+function loadArea(){
+
+let stage=STAGES[stageIndex]
+
+stageUI.innerText=stage.name
+wordUI.innerText=stage.areas[areaIndex]
+typedUI.innerText=""
+commentUI.innerText=say()
+
+}
+
+function nextArea(){
+
+runner.vy=-12
+runner.x+=200
+
+areaIndex++
+
+let stage=STAGES[stageIndex]
+
+if(areaIndex>=stage.areas.length){
+
+stageIndex++
+areaIndex=0
+
+if(stageIndex>=STAGES.length){
+finish()
+return
+}
+
+}
+
+loadArea()
+
+}
+
+function finish(){
+
+let time=(Date.now()-startTime)/1000
+
+saveScore(time)
+
+alert("完全制覇！！ タイム："+time+"秒")
+
+location.reload()
+
+}
+
+function saveScore(t){
+
+let scores=JSON.parse(localStorage.getItem("scores")||"[]")
+
+scores.push(t)
+
+scores.sort((a,b)=>a-b)
+
+scores=scores.slice(0,5)
+
+localStorage.setItem("scores",JSON.stringify(scores))
+
+}
+
+input.addEventListener("input",()=>{
+
+let target=STAGES[stageIndex].areas[areaIndex]
+
+typedUI.innerText=input.value
+
+if(input.value===target){
+
+input.value=""
+nextArea()
+
+}
+
+})
+
+document.addEventListener("keydown",(e)=>{
+
+if(e.key==="Backspace"){
+
+miss++
+
+missUI.innerText="MISS "+miss+"/"+missLimit
+
+if(miss>=missLimit){
+
+alert("落水！！")
+location.reload()
+
+}
+
+}
+
+})
+
+function physics(){
+
+runner.frame++
+
+runner.vy+=0.6
+runner.y+=runner.vy
+
+if(runner.y>300){
+runner.y=300
+runner.vy=0
+}
+
+}
+
+function update(){
+
+timer-=0.02
+
+timerUI.innerText="TIME "+Math.floor(timer)
+
+cameraX=runner.x-200
+
+}
+
+function drawRunner(){
+
+ctx.fillStyle="red"
+
+let leg=Math.sin(runner.frame*0.3)*5
+
+ctx.fillRect(runner.x-cameraX,runner.y,40,40)
+
+ctx.fillRect(runner.x-cameraX+5,runner.y+40,10,10+leg)
+ctx.fillRect(runner.x-cameraX+25,runner.y+40,10,10-leg)
+
+}
+
+function drawGround(){
+
+ctx.fillStyle="#444"
+
+for(let i=0;i<60;i++){
+
+ctx.fillRect(i*300-cameraX,350,200,20)
+
+}
+
+}
+
+function drawWater(){
+
+ctx.fillStyle="#0077ff"
+
+ctx.fillRect(0,370,canvas.width,150)
+
+}
+
+function draw(){
+
+ctx.clearRect(0,0,canvas.width,canvas.height)
+
+drawWater()
+drawGround()
+drawRunner()
+
+}
+
+function loop(){
+
+physics()
+update()
+draw()
+
+requestAnimationFrame(loop)
+
+}
+
+function showRanking(){
+
+let scores=JSON.parse(localStorage.getItem("scores")||"[]")
+
+let html="RANKING<br>"
+
+scores.forEach((s,i)=>{
+
+html+=(i+1)+"位 "+s+"秒<br>"
+
+})
+
+document.getElementById("ranking").innerHTML=html
+
+}
+
+showRanking()
+
+</script>
+
+</body>
+</html><!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>SASUKE TYPING</title>
+
+<style>
+
+body{
+margin:0;
+background:#020c18;
+color:white;
+font-family:sans-serif;
+overflow:hidden;
+}
+
+#titleScreen{
+position:absolute;
+width:100%;
+height:100%;
+display:flex;
+flex-direction:column;
+justify-content:center;
+align-items:center;
+background:#010b16;
+}
+
+#title{
+font-size:60px;
+color:gold;
+margin-bottom:20px;
+}
+
+button{
+font-size:24px;
+padding:12px 30px;
+margin:5px;
+cursor:pointer;
+}
+
+#ranking{
+margin-top:20px;
+font-size:18px;
+}
+
+#ui{
+position:absolute;
+top:10px;
+left:10px;
+display:none;
+}
+
+#stage{
+font-size:26px;
+color:gold;
+}
+
+#comment{
+color:#ffaa00;
+}
+
+#areaBanner{
+position:absolute;
+top:40%;
+width:100%;
+text-align:center;
+font-size:40px;
+color:white;
+display:none;
+}
+
+#typing{
+position:absolute;
+bottom:20px;
+width:100%;
+text-align:center;
+display:none;
+}
+
+#word{font-size:34px}
+
+#typed{color:#00ff88}
+
+input{
+font-size:28px;
+padding:10px;
+width:420px;
+}
+
+canvas{
+background:linear-gradient(#001,#045);
+display:none;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div id="titleScreen">
+
+<div id="title">SASUKE TYPING</div>
+
+<button onclick="startGame()">START</button>
+
+<div id="ranking"></div>
+
+</div>
+
+<div id="ui">
+
+<div id="stage"></div>
+<div id="timer"></div>
+<div id="miss"></div>
+<div id="comment"></div>
+
+</div>
+
+<div id="areaBanner"></div>
+
+<canvas id="game" width="1200" height="500"></canvas>
+
+<div id="typing">
+
+<div id="word"></div>
+<div id="typed"></div>
+
+<input id="input">
+
+</div>
+
+<script>
+
+const commentary={
+
+"ぷりずむしーそー":"さあ来た！プリズムシーソー！",
+"ろーりんぐひる":"バランスが重要だ！",
+"どらごんぐらいだー":"大ジャンプ！！",
+"たっくる":"パワー勝負！！",
+"そりたつかべ":"名物！そりたつ壁！！"
+
+}
+
+const areas=[
+"ぷりずむしーそー",
+"ろーりんぐひる",
+"どらごんぐらいだー",
+"たっくる",
+"そりたつかべ"
+]
+
+let areaIndex=0
+
+let miss=0
+let timer=150
+
+const canvas=document.getElementById("game")
+const ctx=canvas.getContext("2d")
+
+const input=document.getElementById("input")
+
+const wordUI=document.getElementById("word")
+const typedUI=document.getElementById("typed")
+
+const stageUI=document.getElementById("stage")
+const timerUI=document.getElementById("timer")
+const missUI=document.getElementById("miss")
+const commentUI=document.getElementById("comment")
+
+const banner=document.getElementById("areaBanner")
+
+let runner={x:150,y:300,vy:0,frame:0}
+
+let cameraX=0
+
+function startGame(){
+
+document.getElementById("titleScreen").style.display="none"
+document.getElementById("ui").style.display="block"
+document.getElementById("typing").style.display="block"
+canvas.style.display="block"
+
+loadArea()
+
+loop()
+
+}
+
+function showBanner(text){
+
+banner.innerText=text
+banner.style.display="block"
+
+setTimeout(()=>{
+
+banner.style.display="none"
+
+},2000)
+
+}
+
+function loadArea(){
+
+let name=areas[areaIndex]
+
+wordUI.innerText=name
+typedUI.innerText=""
+
+commentUI.innerText=commentary[name]
+
+showBanner(name)
+
+}
+
+function nextArea(){
+
+runner.vy=-12
+runner.x+=200
+
+areaIndex++
+
+if(areaIndex>=areas.length){
+
+alert("クリア！！")
+location.reload()
+
+}
+
+loadArea()
+
+}
+
+input.addEventListener("input",()=>{
+
+let target=areas[areaIndex]
+
+typedUI.innerText=input.value
+
+if(input.value===target){
+
+input.value=""
+
+commentUI.innerText="観客「おおおお！！」"
+
+nextArea()
+
+}
+
+})
+
+document.addEventListener("keydown",(e)=>{
+
+if(e.key==="Backspace"){
+
+miss++
+
+missUI.innerText="MISS "+miss+"/5"
+
+if(miss>=5){
+
+splash()
+
+}
+
+}
+
+})
+
+function splash(){
+
+commentUI.innerText="SPLASH!!"
+
+setTimeout(()=>{
+
+alert("落水！！")
+location.reload()
+
+},1000)
+
+}
+
+function physics(){
+
+runner.frame++
+
+runner.vy+=0.6
+runner.y+=runner.vy
+
+if(runner.y>300){
+runner.y=300
+runner.vy=0
+}
+
+}
+
+function update(){
+
+timer-=0.02
+
+timerUI.innerText="TIME "+Math.floor(timer)
+
+cameraX=runner.x-200
+
+}
+
+function drawRunner(){
+
+ctx.fillStyle="red"
+
+let leg=Math.sin(runner.frame*0.3)*5
+
+ctx.fillRect(runner.x-cameraX,runner.y,40,40)
+
+ctx.fillRect(runner.x-cameraX+5,runner.y+40,10,10+leg)
+ctx.fillRect(runner.x-cameraX+25,runner.y+40,10,10-leg)
+
+}
+
+function drawGround(){
+
+ctx.fillStyle="#444"
+
+for(let i=0;i<50;i++){
+
+ctx.fillRect(i*300-cameraX,350,200,20)
+
+}
+
+}
+
+function drawWater(){
+
+ctx.fillStyle="#0077ff"
+
+ctx.fillRect(0,370,canvas.width,150)
+
+}
+
+function draw(){
+
+ctx.clearRect(0,0,canvas.width,canvas.height)
+
+drawWater()
+drawGround()
+drawRunner()
+
+}
+
+function loop(){
+
+physics()
+update()
+draw()
+
+requestAnimationFrame(loop)
+
+}
+
+</script>
+
+</body>
+</html><!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>SASUKE TYPING</title>
+
+<style>
+
+body{
+margin:0;
+background:#020c18;
+color:white;
+font-family:sans-serif;
+overflow:hidden;
+text-align:center;
+}
+
+#titleScreen{
+position:absolute;
+width:100%;
+height:100%;
+display:flex;
+flex-direction:column;
+justify-content:center;
+align-items:center;
+background:#010b16;
+}
+
+#title{
+font-size:70px;
+color:gold;
+animation:glow 2s infinite alternate;
+}
+
+@keyframes glow{
+from{ text-shadow:0 0 10px gold; }
+to{ text-shadow:0 0 40px gold; }
+}
+
+button{
+font-size:24px;
+padding:12px 30px;
+margin:10px;
+cursor:pointer;
+}
+
+#ui{
+position:absolute;
+top:10px;
+left:10px;
+display:none;
+}
+
+#typing{
+position:absolute;
+bottom:20px;
+width:100%;
+text-align:center;
+display:none;
+}
+
+#word{font-size:34px}
+#typed{color:#00ff88}
+
+input{
+font-size:28px;
+padding:10px;
+width:420px;
+}
+
+#areaBanner{
+position:absolute;
+top:40%;
+width:100%;
+font-size:40px;
+display:none;
+}
+
+#ending{
+position:absolute;
+top:35%;
+width:100%;
+font-size:60px;
+display:none;
+}
+
+canvas{
+background:linear-gradient(#001,#045);
+display:none;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div id="titleScreen">
+
+<div id="title">SASUKE TYPING</div>
+
+<button onclick="startGame()">START</button>
+
+</div>
+
+<div id="ui">
+
+<div id="stage"></div>
+<div id="timer"></div>
+<div id="miss"></div>
+
+</div>
+
+<div id="areaBanner"></div>
+
+<div id="ending">
+
+🏆 完全制覇<br>
+
+<button onclick="retry()">RETRY</button>
+<button onclick="title()">TITLE</button>
+
+</div>
+
+<canvas id="game" width="1200" height="500"></canvas>
+
+<div id="typing">
+
+<div id="word"></div>
+<div id="typed"></div>
+
+<input id="input">
+
+</div>
+
+<script>
+
+const areas=[
+"ぷりずむしーそー",
+"ろーりんぐひる",
+"どらごんぐらいだー",
+"たっくる",
+"そりたつかべ"
+]
+
+let areaIndex=0
+let miss=0
+let timer=150
+
+const canvas=document.getElementById("game")
+const ctx=canvas.getContext("2d")
+
+const input=document.getElementById("input")
+const wordUI=document.getElementById("word")
+const typedUI=document.getElementById("typed")
+
+const banner=document.getElementById("areaBanner")
+
+let runner={x:150,y:300,vy:0,frame:0}
+
+let cameraX=0
+
+function startGame(){
+
+document.getElementById("titleScreen").style.display="none"
+document.getElementById("ui").style.display="block"
+document.getElementById("typing").style.display="block"
+canvas.style.display="block"
+
+loadArea()
+loop()
+
+}
+
+function showBanner(text){
+
+banner.innerText=text
+banner.style.display="block"
+
+setTimeout(()=>{
+
+banner.style.display="none"
+
+},2000)
+
+}
+
+function loadArea(){
+
+let name=areas[areaIndex]
+
+wordUI.innerText=name
+typedUI.innerText=""
+
+showBanner(name)
+
+}
+
+function nextArea(){
+
+runner.vy=-12
+runner.x+=200
+
+areaIndex++
+
+if(areaIndex>=areas.length){
+
+finish()
+return
+
+}
+
+loadArea()
+
+}
+
+function finish(){
+
+document.getElementById("ending").style.display="block"
+document.getElementById("typing").style.display="none"
+
+fireworks()
+
+}
+
+function retry(){
+
+location.reload()
+
+}
+
+function title(){
+
+location.reload()
+
+}
+
+input.addEventListener("input",()=>{
+
+let target=areas[areaIndex]
+
+typedUI.innerText=input.value
+
+if(input.value===target){
+
+input.value=""
+
+nextArea()
+
+}
+
+})
+
+document.addEventListener("keydown",(e)=>{
+
+if(e.key==="Backspace"){
+
+miss++
+
+if(miss>=5){
+
+alert("落水！！")
+location.reload()
+
+}
+
+}
+
+})
+
+function physics(){
+
+runner.frame++
+
+runner.vy+=0.6
+runner.y+=runner.vy
+
+if(runner.y>300){
+runner.y=300
+runner.vy=0
+}
+
+}
+
+function update(){
+
+timer-=0.02
+
+cameraX=runner.x-200
+
+}
+
+function drawRunner(){
+
+ctx.fillStyle="red"
+
+let leg=Math.sin(runner.frame*0.3)*5
+
+ctx.fillRect(runner.x-cameraX,runner.y,40,40)
+
+ctx.fillRect(runner.x-cameraX+5,runner.y+40,10,10+leg)
+ctx.fillRect(runner.x-cameraX+25,runner.y+40,10,10-leg)
+
+}
+
+function drawGround(){
+
+ctx.fillStyle="#444"
+
+for(let i=0;i<50;i++){
+
+ctx.fillRect(i*300-cameraX,350,200,20)
+
+}
+
+}
+
+function drawWater(){
+
+ctx.fillStyle="#0077ff"
+
+ctx.fillRect(0,370,canvas.width,150)
+
+}
+
+function fireworks(){
+
+for(let i=0;i<20;i++){
+
+setTimeout(()=>{
+
+ctx.fillStyle="yellow"
+
+ctx.beginPath()
+ctx.arc(Math.random()*1200,Math.random()*200,5,0,6.28)
+ctx.fill()
+
+},i*100)
+
+}
+
+}
+
+function draw(){
+
+ctx.clearRect(0,0,canvas.width,canvas.height)
+
+drawWater()
+drawGround()
+drawRunner()
+
+}
+
+function loop(){
+
+physics()
+update()
+draw()
+
+requestAnimationFrame(loop)
+
+}
+
+</script>
+
+</body>
+</html><!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>SASUKE TYPING ULTIMATE</title>
+
+<style>
+
+body{
+margin:0;
+background:black;
+color:white;
+font-family:sans-serif;
+overflow:hidden;
+text-align:center;
+}
+
+#title{
+font-size:70px;
+color:gold;
+margin-top:120px;
+animation:glow 2s infinite alternate;
+}
+
+@keyframes glow{
+from{ text-shadow:0 0 10px gold;}
+to{ text-shadow:0 0 40px gold;}
+}
+
+button{
+font-size:25px;
+padding:12px 40px;
+margin:10px;
+cursor:pointer;
+}
+
+#menu{
+position:absolute;
+width:100%;
+height:100%;
+}
+
+#gameUI{
+display:none;
+position:absolute;
+top:10px;
+left:10px;
+}
+
+#combo{
+color:orange;
+font-size:26px;
+}
+
+#speed{
+color:#00ff88;
+}
+
+#typing{
+position:absolute;
+bottom:20px;
+width:100%;
+display:none;
+}
+
+#word{font-size:36px}
+#typed{color:#00ff88}
+
+input{
+font-size:28px;
+padding:10px;
+width:420px;
+}
+
+canvas{
+display:none;
+background:linear-gradient(#001,#045);
+}
+
+#ending{
+position:absolute;
+top:35%;
+width:100%;
+font-size:60px;
+display:none;
+}
+
+</style>
+</head>
+
+<body>
+
+<div id="menu">
+
+<div id="title">SASUKE TYPING</div>
+
+<button onclick="start()">START</button>
+
+</div>
+
+<div id="gameUI">
+
+<div id="timer"></div>
+<div id="miss"></div>
+<div id="combo"></div>
+<div id="speed"></div>
+
+</div>
+
+<canvas id="game" width="1200" height="500"></canvas>
+
+<div id="typing">
+
+<div id="word"></div>
+<div id="typed"></div>
+
+<input id="input">
+
+</div>
+
+<div id="ending"></div>
+
+<script>
+
+const stages=[
+
+"ぷりずむしーそー",
+"ろーりんぐひる",
+"すくりゅーどらいばー",
+"ふぃっしゅぼーんりばーす",
+"どらごんぐらいだー",
+"たっくる",
+"そりたつかべ",
+"さーもんらだー",
+"くりふでぃめんしょん",
+"すぴーどくらいみんぐ"
+
+]
+
+let stageIndex=0
+let miss=0
+let combo=0
+
+let timer=180
+
+const canvas=document.getElementById("game")
+const ctx=canvas.getContext("2d")
+
+const input=document.getElementById("input")
+
+const wordUI=document.getElementById("word")
+const typedUI=document.getElementById("typed")
+
+const comboUI=document.getElementById("combo")
+const speedUI=document.getElementById("speed")
+
+let lastTypeTime=0
+
+let runner={x:150,y:300,vy:0}
+
+let cameraX=0
+
+function start(){
+
+document.getElementById("menu").style.display="none"
+
+canvas.style.display="block"
+document.getElementById("typing").style.display="block"
+document.getElementById("gameUI").style.display="block"
+
+loadStage()
+
+loop()
+
+}
+
+function loadStage(){
+
+wordUI.innerText=stages[stageIndex]
+typedUI.innerText=""
+
+}
+
+function nextStage(){
+
+runner.vy=-12
+runner.x+=200
+
+stageIndex++
+
+if(stageIndex>=stages.length){
+
+finish()
+return
+
+}
+
+loadStage()
+
+}
+
+function finish(){
+
+let rank="C"
+
+if(combo>20) rank="B"
+if(combo>40) rank="A"
+if(combo>60) rank="S"
+
+document.getElementById("ending").innerHTML=
+
+"🏆 完全制覇<br>ランク "+rank+
+"<br><button onclick='location.reload()'>RETRY</button>"
+
+document.getElementById("ending").style.display="block"
+
+}
+
+input.addEventListener("input",()=>{
+
+let target=stages[stageIndex]
+
+typedUI.innerText=input.value
+
+if(input.value===target){
+
+let now=Date.now()
+
+if(now-lastTypeTime<2000){
+
+combo++
+
+}else{
+
+combo=1
+
+}
+
+comboUI.innerText="COMBO x"+combo
+
+if(now-lastTypeTime<800){
+
+speedUI.innerText="SPEED BONUS!"
+
+}
+
+lastTypeTime=now
+
+input.value=""
+
+nextStage()
+
+}
+
+})
+
+document.addEventListener("keydown",(e)=>{
+
+if(e.key==="Backspace"){
+
+miss++
+combo=0
+
+document.getElementById("miss").innerText="MISS "+miss
+
+if(miss>=5){
+
+alert("落水！！")
+location.reload()
+
+}
+
+}
+
+})
+
+function physics(){
+
+runner.vy+=0.6
+runner.y+=runner.vy
+
+if(runner.y>300){
+
+runner.y=300
+runner.vy=0
+
+}
+
+}
+
+function update(){
+
+timer-=0.02
+
+document.getElementById("timer").innerText="TIME "+Math.floor(timer)
+
+cameraX=runner.x-200
+
+}
+
+function drawRunner(){
+
+ctx.fillStyle="red"
+
+ctx.fillRect(runner.x-cameraX,runner.y,40,40)
+
+}
+
+function drawGround(){
+
+ctx.fillStyle="#444"
+
+for(let i=0;i<60;i++){
+
+ctx.fillRect(i*300-cameraX,350,200,20)
+
+}
+
+}
+
+function drawWater(){
+
+ctx.fillStyle="#0077ff"
+
+ctx.fillRect(0,370,canvas.width,150)
+
+}
+
+function draw(){
+
+ctx.clearRect(0,0,canvas.width,canvas.height)
+
+drawWater()
+drawGround()
+drawRunner()
+
+}
+
+function loop(){
+
+physics()
+update()
+draw()
+
+requestAnimationFrame(loop)
+
+}
+
+</script>
+
+</body>
+</html><!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>SASUKE TYPING ULTIMATE</title>
+
+<style>
+
+body{
+margin:0;
+background:#000814;
+color:white;
+font-family:sans-serif;
+overflow:hidden;
+text-align:center;
+}
+
+#titleScreen{
+position:absolute;
+width:100%;
+height:100%;
+display:flex;
+flex-direction:column;
+justify-content:center;
+align-items:center;
+}
+
+#title{
+font-size:70px;
+color:gold;
+animation:glow 2s infinite alternate;
+}
+
+@keyframes glow{
+from{ text-shadow:0 0 10px gold;}
+to{ text-shadow:0 0 40px gold;}
+}
+
+button{
+font-size:24px;
+padding:10px 30px;
+margin:10px;
+cursor:pointer;
+}
+
+#ui{
+position:absolute;
+top:10px;
+left:10px;
+display:none;
+text-align:left;
+}
+
+#combo{color:orange}
+#speed{color:#00ff88}
+
+#typing{
+position:absolute;
+bottom:20px;
+width:100%;
+display:none;
+}
+
+#word{font-size:36px}
+#typed{color:#00ff88}
+
+input{
+font-size:28px;
+padding:10px;
+width:420px;
+}
+
+#banner{
+position:absolute;
+top:40%;
+width:100%;
+font-size:40px;
+display:none;
+}
+
+#ending{
+position:absolute;
+top:35%;
+width:100%;
+font-size:60px;
+display:none;
+}
+
+canvas{
+background:linear-gradient(#001,#045);
+display:none;
+}
+
+</style>
+</head>
+
+<body>
+
+<div id="titleScreen">
+
+<div id="title">SASUKE TYPING</div>
+
+<button onclick="startGame()">START</button>
+
+</div>
+
+<div id="ui">
+
+<div id="stage"></div>
+<div id="timer"></div>
+<div id="miss"></div>
+<div id="combo"></div>
+<div id="speed"></div>
+<div id="comment"></div>
+
+</div>
+
+<div id="banner"></div>
+
+<canvas id="game" width="1200" height="500"></canvas>
+
+<div id="typing">
+
+<div id="word"></div>
+<div id="typed"></div>
+
+<input id="input">
+
+</div>
+
+<div id="ending"></div>
+
+<script>
+
+const stages=[
+
+{stage:"1st STAGE",areas:[
+"ぷりずむしーそー",
+"ろーりんぐひる",
+"すくりゅーどらいばー",
+"ふぃっしゅぼーんりばーす",
+"どらごんぐらいだー",
+"たっくる",
+"そりたつかべ"
+]},
+
+{stage:"2nd STAGE",areas:[
+"ろーりんぐろぐ",
+"さーもんらだー",
+"ばっくすとりーむ"
+]},
+
+{stage:"3rd STAGE",areas:[
+"ふらいんぐばー",
+"さいどわいんだー",
+"くりふでぃめんしょん"
+]},
+
+{stage:"FINAL STAGE",areas:[
+"すぴーどくらいみんぐ"
+]}
+
+]
+
+const comments=[
+"さあ来た！！",
+"これは難所！！",
+"いけるか！？",
+"観客が沸く！！",
+"完全制覇目前！！"
+]
+
+let stageIndex=0
+let areaIndex=0
+
+let miss=0
+let combo=0
+let timer=180
+
+let lastType=0
+
+const canvas=document.getElementById("game")
+const ctx=canvas.getContext("2d")
+
+const wordUI=document.getElementById("word")
+const typedUI=document.getElementById("typed")
+
+const stageUI=document.getElementById("stage")
+const timerUI=document.getElementById("timer")
+const missUI=document.getElementById("miss")
+const comboUI=document.getElementById("combo")
+const speedUI=document.getElementById("speed")
+const commentUI=document.getElementById("comment")
+
+const banner=document.getElementById("banner")
+
+const input=document.getElementById("input")
+
+let runner={x:150,y:300,vy:0,frame:0}
+
+let cameraX=0
+
+function startGame(){
+
+document.getElementById("titleScreen").style.display="none"
+
+document.getElementById("ui").style.display="block"
+document.getElementById("typing").style.display="block"
+
+canvas.style.display="block"
+
+loadArea()
+
+loop()
+
+}
+
+function showBanner(text){
+
+banner.innerText=text
+banner.style.display="block"
+
+setTimeout(()=>{
+
+banner.style.display="none"
+
+},2000)
+
+}
+
+function randomComment(){
+
+let r=Math.floor(Math.random()*comments.length)
+
+commentUI.innerText=comments[r]
+
+}
+
+function loadArea(){
+
+let stage=stages[stageIndex]
+
+stageUI.innerText=stage.stage
+
+let area=stage.areas[areaIndex]
+
+wordUI.innerText=area
+typedUI.innerText=""
+
+showBanner(area)
+
+randomComment()
+
+}
+
+function nextArea(){
+
+runner.vy=-12
+runner.x+=200
+
+areaIndex++
+
+let stage=stages[stageIndex]
+
+if(areaIndex>=stage.areas.length){
+
+stageIndex++
+areaIndex=0
+
+if(stageIndex>=stages.length){
+
+finish()
+return
+
+}
+
+}
+
+loadArea()
+
+}
+
+function finish(){
+
+let rank="C"
+
+if(combo>20) rank="B"
+if(combo>40) rank="A"
+if(combo>60) rank="S"
+
+document.getElementById("ending").innerHTML=
+
+"🏆 完全制覇<br>RANK "+rank+
+"<br><button onclick='location.reload()'>RETRY</button>"
+
+document.getElementById("ending").style.display="block"
+
+document.getElementById("typing").style.display="none"
+
+}
+
+input.addEventListener("input",()=>{
+
+let target=stages[stageIndex].areas[areaIndex]
+
+typedUI.innerText=input.value
+
+if(input.value===target){
+
+let now=Date.now()
+
+if(now-lastType<2000){
+
+combo++
+
+}else{
+
+combo=1
+
+}
+
+comboUI.innerText="COMBO x"+combo
+
+if(now-lastType<800){
+
+speedUI.innerText="SPEED BONUS!"
+
+}
+
+lastType=now
+
+input.value=""
+
+nextArea()
+
+}
+
+})
+
+document.addEventListener("keydown",(e)=>{
+
+if(e.key==="Backspace"){
+
+miss++
+combo=0
+
+missUI.innerText="MISS "+miss
+
+if(miss>=5){
+
+alert("落水！！")
+location.reload()
+
+}
+
+}
+
+})
+
+function physics(){
+
+runner.frame++
+
+runner.vy+=0.6
+runner.y+=runner.vy
+
+if(runner.y>300){
+
+runner.y=300
+runner.vy=0
+
+}
+
+}
+
+function update(){
+
+timer-=0.02
+
+timerUI.innerText="TIME "+Math.floor(timer)
+
+cameraX=runner.x-200
+
+}
+
+function drawRunner(){
+
+ctx.fillStyle="red"
+
+let leg=Math.sin(runner.frame*0.3)*5
+
+ctx.fillRect(runner.x-cameraX,runner.y,40,40)
+
+ctx.fillRect(runner.x-cameraX+5,runner.y+40,10,10+leg)
+ctx.fillRect(runner.x-cameraX+25,runner.y+40,10,10-leg)
+
+}
+
+function drawGround(){
+
+ctx.fillStyle="#444"
+
+for(let i=0;i<60;i++){
+
+ctx.fillRect(i*300-cameraX,350,200,20)
+
+}
+
+}
+
+function drawWater(){
+
+ctx.fillStyle="#0077ff"
+
+ctx.fillRect(0,370,canvas.width,150)
+
+}
+
+function draw(){
+
+ctx.clearRect(0,0,canvas.width,canvas.height)
+
+drawWater()
+drawGround()
+drawRunner()
+
+}
+
+function loop(){
+
+physics()
+update()
+draw()
+
+requestAnimationFrame(loop)
+
+}
+
+</script>
+
+</body>
+</html><!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>SASUKE TYPING FINAL</title>
+
+<style>
+
+body{
+margin:0;
+background:#000814;
+color:white;
+font-family:sans-serif;
+overflow:hidden;
+text-align:center;
+}
+
+#titleScreen{
+position:absolute;
+width:100%;
+height:100%;
+display:flex;
+flex-direction:column;
+justify-content:center;
+align-items:center;
+}
+
+#title{
+font-size:70px;
+color:gold;
+animation:glow 2s infinite alternate;
+}
+
+@keyframes glow{
+from{ text-shadow:0 0 10px gold;}
+to{ text-shadow:0 0 40px gold;}
+}
+
+button{
+font-size:24px;
+padding:12px 30px;
+margin:10px;
+cursor:pointer;
+}
+
+#ui{
+position:absolute;
+top:10px;
+left:10px;
+display:none;
+text-align:left;
+}
+
+#combo{color:orange}
+#speed{color:#00ff88}
+
+#progress{
+width:300px;
+height:20px;
+background:#333;
+margin-top:5px;
+}
+
+#bar{
+height:100%;
+width:0%;
+background:#00ff88;
+}
+
+#crowd{
+margin-top:5px;
+}
+
+#typing{
+position:absolute;
+bottom:20px;
+width:100%;
+display:none;
+}
+
+#word{font-size:36px}
+#typed{color:#00ff88}
+
+input{
+font-size:28px;
+padding:10px;
+width:420px;
+}
+
+#banner{
+position:absolute;
+top:40%;
+width:100%;
+font-size:40px;
+display:none;
+}
+
+#ending{
+position:absolute;
+top:35%;
+width:100%;
+font-size:60px;
+display:none;
+}
+
+canvas{
+background:linear-gradient(#001,#045);
+display:none;
+}
+
+</style>
+</head>
+
+<body>
+
+<div id="titleScreen">
+
+<div id="title">SASUKE TYPING</div>
+
+<button onclick="startGame()">START</button>
+
+</div>
+
+<div id="ui">
+
+<div id="stage"></div>
+<div id="timer"></div>
+<div id="miss"></div>
+<div id="combo"></div>
+<div id="speed"></div>
+
+<div id="progress">
+<div id="bar"></div>
+</div>
+
+<div id="crowd"></div>
+
+</div>
+
+<div id="banner"></div>
+
+<canvas id="game" width="1200" height="500"></canvas>
+
+<div id="typing">
+
+<div id="word"></div>
+<div id="typed"></div>
+
+<input id="input">
+
+</div>
+
+<div id="ending"></div>
+
+<script>
+
+const areas=[
+
+"ぷりずむしーそー",
+"ろーりんぐひる",
+"すくりゅーどらいばー",
+"ふぃっしゅぼーんりばーす",
+"どらごんぐらいだー",
+"たっくる",
+"そりたつかべ",
+"さーもんらだー",
+"くりふでぃめんしょん",
+"すぴーどくらいみんぐ"
+
+]
+
+let index=0
+let miss=0
+let combo=0
+let crowd=0
+
+let timer=180
+
+let lastType=0
+
+const canvas=document.getElementById("game")
+const ctx=canvas.getContext("2d")
+
+const wordUI=document.getElementById("word")
+const typedUI=document.getElementById("typed")
+
+const comboUI=document.getElementById("combo")
+const speedUI=document.getElementById("speed")
+
+const bar=document.getElementById("bar")
+
+const crowdUI=document.getElementById("crowd")
+
+const input=document.getElementById("input")
+
+let runner={x:150,y:300,vy:0,frame:0}
+
+let cameraX=0
+
+function startGame(){
+
+document.getElementById("titleScreen").style.display="none"
+
+document.getElementById("ui").style.display="block"
+document.getElementById("typing").style.display="block"
+
+canvas.style.display="block"
+
+loadArea()
+
+loop()
+
+}
+
+function loadArea(){
+
+let area=areas[index]
+
+wordUI.innerText=area
+typedUI.innerText=""
+
+showBanner(area)
+
+}
+
+function showBanner(text){
+
+const b=document.getElementById("banner")
+
+b.innerText=text
+b.style.display="block"
+
+setTimeout(()=>{
+
+b.style.display="none"
+
+},2000)
+
+}
+
+function nextArea(){
+
+runner.vy=-12
+runner.x+=200
+
+index++
+
+let p=(index/areas.length)*100
+bar.style.width=p+"%"
+
+crowd+=10
+
+crowdUI.innerText="歓声 "+"█".repeat(Math.floor(crowd/10))
+
+if(index>=areas.length){
+
+finish()
+return
+
+}
+
+loadArea()
+
+}
+
+function finish(){
+
+let rank="C"
+
+if(combo>20) rank="B"
+if(combo>40) rank="A"
+if(combo>60) rank="S"
+
+document.getElementById("ending").innerHTML=
+
+"🏆 完全制覇<br>RANK "+rank+
+"<br><button onclick='location.reload()'>RETRY</button>"
+
+document.getElementById("ending").style.display="block"
+
+}
+
+input.addEventListener("input",()=>{
+
+let target=areas[index]
+
+typedUI.innerText=input.value
+
+if(input.value===target){
+
+let now=Date.now()
+
+if(now-lastType<2000){
+
+combo++
+
+}else{
+
+combo=1
+
+}
+
+comboUI.innerText="COMBO x"+combo
+
+if(now-lastType<800){
+
+speedUI.innerText="SPEED BONUS!"
+
+}
+
+lastType=now
+
+input.value=""
+
+nextArea()
+
+}
+
+})
+
+document.addEventListener("keydown",(e)=>{
+
+if(e.key==="Backspace"){
+
+miss++
+combo=0
+
+document.getElementById("miss").innerText="MISS "+miss
+
+if(miss>=5){
+
+alert("落水！！")
+location.reload()
+
+}
+
+}
+
+})
+
+function physics(){
+
+runner.frame++
+
+runner.vy+=0.6
+runner.y+=runner.vy
+
+if(runner.y>300){
+
+runner.y=300
+runner.vy=0
+
+}
+
+}
+
+function update(){
+
+timer-=0.02
+
+document.getElementById("timer").innerText="TIME "+Math.floor(timer)
+
+cameraX=runner.x-200
+
+}
+
+function drawRunner(){
+
+ctx.fillStyle="red"
+
+let leg=Math.sin(runner.frame*0.3)*5
+
+ctx.fillRect(runner.x-cameraX,runner.y,40,40)
+
+ctx.fillRect(runner.x-cameraX+5,runner.y+40,10,10+leg)
+ctx.fillRect(runner.x-cameraX+25,runner.y+40,10,10-leg)
+
+}
+
+function drawGround(){
+
+ctx.fillStyle="#444"
+
+for(let i=0;i<60;i++){
+
+ctx.fillRect(i*300-cameraX,350,200,20)
+
+}
+
+}
+
+function drawWater(){
+
+ctx.fillStyle="#0077ff"
+
+ctx.fillRect(0,370,canvas.width,150)
+
+}
+
+function draw(){
+
+ctx.clearRect(0,0,canvas.width,canvas.height)
+
+drawWater()
+drawGround()
+drawRunner()
+
+}
+
+function loop(){
+
+physics()
+update()
+draw()
+
+requestAnimationFrame(loop)
+
+}
+
+</script>
+
+</body>
+</html><!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>SASUKE TYPING COMPLETE</title>
+
+<style>
+
+body{
+margin:0;
+background:#000814;
+color:white;
+font-family:sans-serif;
+overflow:hidden;
+text-align:center;
+}
+
+#titleScreen{
+position:absolute;
+width:100%;
+height:100%;
+display:flex;
+flex-direction:column;
+justify-content:center;
+align-items:center;
+}
+
+#title{
+font-size:70px;
+color:gold;
+}
+
+button{
+font-size:24px;
+padding:12px 30px;
+margin:10px;
+cursor:pointer;
+}
+
+#ui{
+position:absolute;
+top:10px;
+left:10px;
+display:none;
+text-align:left;
+}
+
+#typing{
+position:absolute;
+bottom:20px;
+width:100%;
+display:none;
+}
+
+#word{font-size:36px}
+#typed{color:#00ff88}
+
+input{
+font-size:28px;
+padding:10px;
+width:420px;
+}
+
+#progress{
+width:300px;
+height:20px;
+background:#333;
+margin-top:5px;
+}
+
+#bar{
+height:100%;
+width:0%;
+background:#00ff88;
+}
+
+#ending{
+position:absolute;
+top:35%;
+width:100%;
+font-size:50px;
+display:none;
+}
+
+canvas{
+background:linear-gradient(#001,#045);
+display:none;
+}
+
+</style>
+</head>
+
+<body>
+
+<div id="titleScreen">
+
+<div id="title">SASUKE TYPING</div>
+
+<div id="best"></div>
+
+<button onclick="startGame()">START</button>
+
+</div>
+
+<div id="ui">
+
+<div id="timer"></div>
+<div id="miss"></div>
+<div id="combo"></div>
+
+<div id="progress">
+<div id="bar"></div>
+</div>
+
+</div>
+
+<canvas id="game" width="1200" height="500"></canvas>
+
+<div id="typing">
+
+<div id="word"></div>
+<div id="typed"></div>
+
+<input id="input">
+
+</div>
+
+<div id="ending"></div>
+
+<script>
+
+const areas=[
+"ぷりずむしーそー",
+"ろーりんぐひる",
+"すくりゅーどらいばー",
+"ふぃっしゅぼーんりばーす",
+"どらごんぐらいだー",
+"たっくる",
+"そりたつかべ",
+"さーもんらだー",
+"くりふでぃめんしょん",
+"すぴーどくらいみんぐ"
+]
+
+let index=0
+let miss=0
+let combo=0
+
+let startTime=0
+
+const canvas=document.getElementById("game")
+const ctx=canvas.getContext("2d")
+
+const wordUI=document.getElementById("word")
+const typedUI=document.getElementById("typed")
+
+const comboUI=document.getElementById("combo")
+const missUI=document.getElementById("miss")
+
+const bar=document.getElementById("bar")
+
+const input=document.getElementById("input")
+
+let runner={x:150,y:300,vy:0}
+
+let cameraX=0
+
+function startGame(){
+
+document.getElementById("titleScreen").style.display="none"
+
+document.getElementById("ui").style.display="block"
+document.getElementById("typing").style.display="block"
+
+canvas.style.display="block"
+
+startTime=Date.now()
+
+loadArea()
+
+loop()
+
+}
+
+function loadArea(){
+
+wordUI.innerText=areas[index]
+typedUI.innerText=""
+
+}
+
+function nextArea(){
+
+runner.vy=-12
+runner.x+=200
+
+index++
+
+let p=(index/areas.length)*100
+bar.style.width=p+"%"
+
+if(index>=areas.length){
+
+finish()
+return
+
+}
+
+loadArea()
+
+}
+
+function finish(){
+
+let time=((Date.now()-startTime)/1000).toFixed(1)
+
+let best=localStorage.getItem("sasuke_best")
+
+if(!best || time<best){
+
+localStorage.setItem("sasuke_best",time)
+best=time
+
+}
+
+document.getElementById("ending").innerHTML=
+
+"🏆 完全制覇<br>"+
+"TIME "+time+"秒<br>"+
+"BEST "+best+"秒<br>"+
+"<button onclick='location.reload()'>RETRY</button>"
+
+document.getElementById("ending").style.display="block"
+
+}
+
+input.addEventListener("input",()=>{
+
+let target=areas[index]
+
+typedUI.innerText=input.value
+
+if(input.value===target){
+
+combo++
+comboUI.innerText="COMBO "+combo
+
+input.value=""
+
+nextArea()
+
+}
+
+})
+
+document.addEventListener("keydown",(e)=>{
+
+if(e.key==="Backspace"){
+
+miss++
+combo=0
+
+missUI.innerText="MISS "+miss
+
+if(miss>=5){
+
+alert("落水！！")
+location.reload()
+
+}
+
+}
+
+})
+
+function physics(){
+
+runner.vy+=0.6
+runner.y+=runner.vy
+
+if(runner.y>300){
+
+runner.y=300
+runner.vy=0
+
+}
+
+}
+
+function update(){
+
+cameraX=runner.x-200
+
+}
+
+function drawRunner(){
+
+ctx.fillStyle="red"
+ctx.fillRect(runner.x-cameraX,runner.y,40,40)
+
+}
+
+function drawGround(){
+
+ctx.fillStyle="#444"
+
+for(let i=0;i<60;i++){
+
+ctx.fillRect(i*300-cameraX,350,200,20)
+
+}
+
+}
+
+function drawWater(){
+
+ctx.fillStyle="#0077ff"
+ctx.fillRect(0,370,canvas.width,150)
+
+}
+
+function draw(){
+
+ctx.clearRect(0,0,canvas.width,canvas.height)
+
+drawWater()
+drawGround()
+drawRunner()
+
+}
+
+function loop(){
+
+physics()
+update()
+draw()
+
+requestAnimationFrame(loop)
+
+}
+
+let best=localStorage.getItem("sasuke_best")
+
+if(best){
+
+document.getElementById("best").innerText="BEST TIME "+best+"秒"
+
+}
+
+</script>
+
+</body>
+</html>
