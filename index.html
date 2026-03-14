@@ -5011,3 +5011,345 @@ document.getElementById("best").innerText="BEST TIME "+best+"秒"
 
 </body>
 </html>
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>SASUKE TYPING</title>
+
+<style>
+
+body{
+margin:0;
+background:#000814;
+color:white;
+font-family:sans-serif;
+overflow:hidden;
+text-align:center;
+}
+
+#titleScreen{
+position:absolute;
+width:100%;
+height:100%;
+display:flex;
+flex-direction:column;
+justify-content:center;
+align-items:center;
+}
+
+#title{
+font-size:70px;
+color:gold;
+}
+
+button{
+font-size:24px;
+padding:12px 30px;
+margin:10px;
+cursor:pointer;
+}
+
+#ui{
+position:absolute;
+top:10px;
+left:10px;
+display:none;
+text-align:left;
+}
+
+#typing{
+position:absolute;
+bottom:20px;
+width:100%;
+display:none;
+}
+
+#word{font-size:36px}
+#typed{color:#00ff88}
+
+input{
+font-size:28px;
+padding:10px;
+width:420px;
+}
+
+#progress{
+width:300px;
+height:20px;
+background:#333;
+margin-top:5px;
+}
+
+#bar{
+height:100%;
+width:0%;
+background:#00ff88;
+}
+
+#ending{
+position:absolute;
+top:35%;
+width:100%;
+font-size:50px;
+display:none;
+}
+
+canvas{
+background:linear-gradient(#001,#045);
+display:none;
+}
+
+</style>
+</head>
+
+<body>
+
+<div id="titleScreen">
+
+<div id="title">SASUKE TYPING</div>
+
+<div id="best"></div>
+
+<button onclick="startGame()">START</button>
+
+</div>
+
+<div id="ui">
+
+<div id="timer">TIME</div>
+<div id="miss">MISS 0</div>
+<div id="combo">COMBO 0</div>
+
+<div id="progress">
+<div id="bar"></div>
+</div>
+
+</div>
+
+<canvas id="game" width="1200" height="500"></canvas>
+
+<div id="typing">
+
+<div id="word"></div>
+<div id="typed"></div>
+
+<input id="input" autocomplete="off">
+
+</div>
+
+<div id="ending"></div>
+
+<script>
+
+const areas=[
+"ぷりずむしーそー",
+"ろーりんぐひる",
+"すくりゅーどらいばー",
+"ふぃっしゅぼーんりばーす",
+"どらごんぐらいだー",
+"たっくる",
+"そりたつかべ",
+"さーもんらだー",
+"くりふでぃめんしょん",
+"すぴーどくらいみんぐ"
+]
+
+let index=0
+let miss=0
+let combo=0
+let startTime=0
+
+const canvas=document.getElementById("game")
+const ctx=canvas.getContext("2d")
+
+const wordUI=document.getElementById("word")
+const typedUI=document.getElementById("typed")
+
+const comboUI=document.getElementById("combo")
+const missUI=document.getElementById("miss")
+
+const bar=document.getElementById("bar")
+
+const input=document.getElementById("input")
+
+let runner={x:150,y:300,vy:0}
+let cameraX=0
+
+function startGame(){
+
+document.getElementById("titleScreen").style.display="none"
+document.getElementById("ui").style.display="block"
+document.getElementById("typing").style.display="block"
+canvas.style.display="block"
+
+startTime=Date.now()
+
+loadArea()
+
+input.focus()
+
+loop()
+
+}
+
+function loadArea(){
+
+wordUI.innerText=areas[index]
+typedUI.innerText=""
+
+}
+
+function nextArea(){
+
+runner.vy=-12
+runner.x+=200
+
+index++
+
+let p=(index/areas.length)*100
+bar.style.width=p+"%"
+
+if(index>=areas.length){
+finish()
+return
+}
+
+loadArea()
+
+}
+
+function finish(){
+
+let time=((Date.now()-startTime)/1000).toFixed(1)
+
+let best=localStorage.getItem("sasuke_best")
+
+if(!best || time<best){
+localStorage.setItem("sasuke_best",time)
+best=time
+}
+
+document.getElementById("ending").innerHTML=
+
+"🏆 完全制覇<br>"+
+"TIME "+time+"秒<br>"+
+"BEST "+best+"秒<br>"+
+"<button onclick='location.reload()'>RETRY</button>"
+
+document.getElementById("ending").style.display="block"
+
+}
+
+input.addEventListener("input",()=>{
+
+let target=areas[index]
+
+typedUI.innerText=input.value
+
+if(input.value===target){
+
+combo++
+comboUI.innerText="COMBO "+combo
+
+input.value=""
+
+nextArea()
+
+}
+
+})
+
+document.addEventListener("keydown",(e)=>{
+
+if(e.key==="Backspace"){
+
+miss++
+combo=0
+
+missUI.innerText="MISS "+miss
+
+if(miss>=5){
+alert("落水！！")
+location.reload()
+}
+
+}
+
+})
+
+function physics(){
+
+runner.vy+=0.6
+runner.y+=runner.vy
+
+if(runner.y>300){
+runner.y=300
+runner.vy=0
+}
+
+}
+
+function update(){
+
+cameraX=runner.x-200
+
+let time=((Date.now()-startTime)/1000).toFixed(1)
+document.getElementById("timer").innerText="TIME "+time
+
+}
+
+function drawRunner(){
+
+ctx.fillStyle="red"
+ctx.fillRect(runner.x-cameraX,runner.y,40,40)
+
+}
+
+function drawGround(){
+
+ctx.fillStyle="#444"
+
+for(let i=0;i<60;i++){
+ctx.fillRect(i*300-cameraX,350,200,20)
+}
+
+}
+
+function drawWater(){
+
+ctx.fillStyle="#0077ff"
+ctx.fillRect(0,370,canvas.width,150)
+
+}
+
+function draw(){
+
+ctx.clearRect(0,0,canvas.width,canvas.height)
+
+drawWater()
+drawGround()
+drawRunner()
+
+}
+
+function loop(){
+
+physics()
+update()
+draw()
+
+requestAnimationFrame(loop)
+
+}
+
+let best=localStorage.getItem("sasuke_best")
+
+if(best){
+document.getElementById("best").innerText="BEST TIME "+best+"秒"
+}
+
+</script>
+
+</body>
+</html>
